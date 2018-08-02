@@ -1,6 +1,6 @@
-env
+venv
 .DS_STORE
 __pycache__
-geckodriver.log
+*.log
 db.sqlite3
 *.pyc
