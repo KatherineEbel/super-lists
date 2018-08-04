@@ -13,7 +13,7 @@ class NewVisitorTest(StaticLiveServerTestCase):
     def setUpClass(cls):
         for arg in sys.argv:
             if 'debug-mode' in arg:
-                cls.server_url = 'http://superlists-staging.katherineebel.com'
+                cls.server_url = 'http://superlists-staging.kathyebel.us'
                 return
         super().setUpClass()
         cls.server_url = cls.live_server_url
