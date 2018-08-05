@@ -5,7 +5,8 @@ from selenium.common.exceptions import WebDriverException
 from django.contrib.staticfiles.testing import StaticLiveServerTestCase
 import time
 
-WAIT = 1
+WAIT_TIME = 1
+STAGING_URL = 'http://superlists-staging.kathyebel.us'
 
 class NewVisitorTest(StaticLiveServerTestCase):
 
@@ -13,25 +14,25 @@ class NewVisitorTest(StaticLiveServerTestCase):
     def setUpClass(cls):
         for arg in sys.argv:
             if 'debug-mode' in arg:
-                cls.server_url = 'http://superlists-staging.kathyebel.us'
+                cls.server_url = STAGING_URL
                 return
         super().setUpClass()
         cls.server_url = cls.live_server_url
 
     @classmethod
     def tearDownClass(cls):
-        if cls.server_url == cls.live_server_url:
+        if cls.server_url != STAGING_URL:
             super().tearDownClass()
 
     def setUp(self):
         self.browser = webdriver.Firefox()
-        self.browser.implicitly_wait(WAIT)
+        self.browser.implicitly_wait(WAIT_TIME)
 
     def tearDown(self):
         self.browser.quit()
 
     def check_for_row_in_list_table(self, row_text):
-        time.sleep(WAIT)
+        time.sleep(WAIT_TIME)
         table = self.browser.find_element_by_id('id_list_table')
         rows = table.find_elements_by_tag_name('tr')
         self.assertIn(row_text, [row.text for row in rows])
@@ -46,7 +47,7 @@ class NewVisitorTest(StaticLiveServerTestCase):
                 self.assertIn(row_text, [row.text for row in rows])
                 return
             except (AssertionError, WebDriverException) as e:
-                if time.time() - start_time > WAIT:
+                if time.time() - start_time > WAIT_TIME:
                     raise e
                 time.sleep(0.5)
 
@@ -75,7 +76,7 @@ class NewVisitorTest(StaticLiveServerTestCase):
         # "1: Buy peacock feathers" as an item in a to-do list
         inputbox.send_keys(Keys.ENTER)
 
-        time.sleep(WAIT)
+        time.sleep(WAIT_TIME)
         edith_list_url = self.browser.current_url
         self.assertRegex(edith_list_url, 'lists/.+')
 
@@ -111,7 +112,7 @@ class NewVisitorTest(StaticLiveServerTestCase):
         inputbox.send_keys(Keys.ENTER)
 
         # Francis gets his own unique URL
-        time.sleep(WAIT)
+        time.sleep(WAIT_TIME)
         francis_list_url = self.browser.current_url
         self.assertRegex(francis_list_url, 'lists/.+')
         self.assertNotEqual(francis_list_url, edith_list_url)
