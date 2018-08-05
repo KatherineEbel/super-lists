@@ -1,0 +1,8 @@
+[Unit]
+Description=SITENAME socket
+
+[Socket]
+ListenStream=/run/SITENAME.socket
+
+[Install]
+WantedBy=sockets.target
